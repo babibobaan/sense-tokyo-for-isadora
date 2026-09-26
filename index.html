@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sénse TOKYO — For Isadora</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --st-ivory:#f5f1ea; --st-paper:#fbf9f5; --st-stone:#ebe4d8; --st-line:#dcd2c3;
+  --st-ink:#151311; --st-ink2:#4a443d; --st-muted:#8c8275; --st-sepia:#7a6650;
+  --st-night:#1b1714; --st-olive:#5e6a4f; --st-sand:#c9b79c;
+  --st-serif:"Didot","Bodoni 72","Bodoni Moda","Playfair Display",Georgia,serif;
+  --st-sans:"Inter","Helvetica Neue","Hiragino Sans",Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--st-night);color:var(--st-ink);font-family:var(--st-sans);font-weight:400;-webkit-font-smoothing:antialiased}
+.deck{height:100dvh;position:relative;overflow:hidden}
+.slide{
+  position:absolute;inset:0;display:none;flex-direction:column;justify-content:space-between;
+  padding:72px 80px 108px;background:var(--st-ivory);color:var(--st-ink);
+}
+.slide.on{display:flex}
+.slide.night{background:var(--st-night);color:var(--st-ivory)}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px}
+.mark{font-family:var(--st-serif);font-size:22px;line-height:.9;letter-spacing:0}
+.mark small{display:block;font-size:11px;letter-spacing:.34em;margin-top:4px;font-family:var(--st-sans);font-weight:500}
+.eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--st-muted);font-weight:500}
+.night .eyebrow{color:#a89c8b}
+.kicker{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--st-sepia)}
+.night .kicker{color:#d9ccb8}
+
+h1{font-family:var(--st-serif);font-weight:400;font-size:clamp(40px,5.6vw,72px);line-height:1.02;letter-spacing:-.02em;max-width:14ch}
+h1 em{font-style:italic;color:#d9ccb8}
+.statement h1{max-width:16ch}
+.lede{max-width:36rem;font-weight:300;font-size:18px;line-height:1.55;color:var(--st-ink2);margin-top:22px}
+.night .lede{color:#cfc5b6}
+.mid{flex:1;display:flex;flex-direction:column;justify-content:center;padding:12px 0 8px}
+
+.offers{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;width:100%}
+.offer{background:var(--st-paper);border:1px solid var(--st-line);padding:28px 24px 24px;min-height:280px;display:flex;flex-direction:column}
+.offer .n{font-family:var(--st-serif);font-size:15px;color:var(--st-muted)}
+.offer h2{font-family:var(--st-serif);font-weight:400;font-size:32px;line-height:1.1;margin:14px 0 12px}
+.offer p{color:var(--st-ink2);font-size:15px;line-height:1.45;font-weight:300}
+.offer .fee{margin-top:auto;padding-top:22px;font-family:var(--st-serif);font-size:26px;border-top:1px solid var(--st-line)}
+
+.rule{display:grid;grid-template-columns:180px 1fr;gap:48px;align-items:end}
+.rule .big{font-family:var(--st-serif);font-size:140px;line-height:.8}
+.rule h1{max-width:12ch}
+
+.years{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--st-ink);width:100%}
+.year{padding:28px 28px 8px 0}
+.year+.year{padding-left:28px;border-left:1px solid var(--st-line)}
+.year .v{font-family:var(--st-serif);font-size:48px;line-height:1}
+.year h2{font-family:var(--st-serif);font-weight:400;font-size:22px;margin:10px 0 8px}
+.year p{color:var(--st-ink2);font-size:14px;font-weight:300;max-width:28ch}
+
+.proofs{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;width:100%}
+.proof{border-top:1px solid var(--st-ink);padding-top:18px}
+.proof h2{font-family:var(--st-serif);font-weight:400;font-size:28px;line-height:1.15;margin-bottom:10px}
+.proof p{color:var(--st-ink2);font-size:15px;font-weight:300}
+
+.names{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%}
+.name{background:var(--st-paper);border:1px solid var(--st-line);padding:20px 18px 16px;min-height:148px;display:flex;flex-direction:column}
+.name h2{font-family:var(--st-serif);font-weight:400;font-size:26px;line-height:1.1}
+.name .role{margin-top:8px;font-size:13px;color:var(--st-ink2);font-weight:300}
+.name .path{margin-top:auto;padding-top:12px;font-size:12px;letter-spacing:.04em;color:var(--st-sepia)}
+
+.later{display:grid;grid-template-columns:1fr 1fr;gap:0;width:100%;border-top:1px solid var(--st-ink)}
+.later article{padding:22px 28px 18px 0}
+.later article:nth-child(even){padding-left:28px;border-left:1px solid var(--st-line)}
+.later article:nth-child(n+3){border-top:1px solid var(--st-line)}
+.later h2{font-family:var(--st-serif);font-weight:400;font-size:26px}
+.later p{color:var(--st-ink2);font-size:14px;font-weight:300;margin-top:6px}
+
+.rooms{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;width:100%}
+.room{padding-top:16px;border-top:1px solid var(--st-ink)}
+.room .when{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--st-sepia)}
+.room h2{font-family:var(--st-serif);font-weight:400;font-size:28px;line-height:1.15;margin:10px 0}
+.room p{color:var(--st-ink2);font-size:14px;font-weight:300}
+
+.days{width:100%;display:flex;flex-direction:column}
+.day{display:grid;grid-template-columns:88px 1fr;gap:20px;padding:16px 0;border-top:1px solid var(--st-line)}
+.day:last-child{border-bottom:1px solid var(--st-line)}
+.day .n{font-family:var(--st-serif);font-size:22px;color:var(--st-muted)}
+.day h2{font-size:18px;font-weight:500}
+.day p{color:var(--st-ink2);font-weight:300;font-size:15px;margin-top:2px}
+
+.week{max-width:18ch}
+.week .to{margin-top:28px;font-family:var(--st-serif);font-size:clamp(28px,3vw,40px);line-height:1.15}
+.week .to span{display:block;margin-top:10px;font-family:var(--st-sans);font-size:15px;letter-spacing:.08em;color:#d9ccb8;font-weight:400}
+
+.foot{display:flex;justify-content:space-between;gap:24px;align-items:flex-end;font-size:12px;color:var(--st-muted);letter-spacing:.04em}
+.night .foot{color:#8c8275}
+.note{max-width:46rem;font-size:13px;line-height:1.45;color:var(--st-muted);font-weight:300}
+
+.chrome{
+  position:fixed;left:0;right:0;bottom:0;z-index:5;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 28px;color:#cfc5b6;
+  background:var(--st-night);border-top:1px solid #3a332c;
+  pointer-events:none;
+}
+.chrome button,.chrome .count{pointer-events:auto}
+.chrome button{
+  background:transparent;color:#f5f1ea;border:1px solid #6b6056;
+  font:inherit;font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  padding:10px 16px;cursor:pointer;
+}
+.chrome button:hover{background:#f5f1ea;color:#151311}
+.chrome .count{font-size:12px;letter-spacing:.22em;font-variant-numeric:tabular-nums}
+.bar{position:fixed;top:0;left:0;height:2px;background:#c9b79c;z-index:6;width:0}
+
+@media (max-width:900px){
+  .slide{padding:28px 22px 96px}
+  h1{font-size:36px}
+  .offers,.names,.years,.proofs,.rooms,.later{grid-template-columns:1fr}
+  .year+.year,.later article:nth-child(even){border-left:0;padding-left:0}
+  .later article:nth-child(n+2){border-top:1px solid var(--st-line)}
+  .rule{grid-template-columns:1fr;gap:12px}
+  .rule .big{font-size:88px}
+  .year .v{font-size:36px}
+  .offer{min-height:0}
+}
+@media print{
+  .chrome,.bar{display:none}
+  .deck{height:auto;overflow:visible}
+  .slide{display:flex !important;position:relative;inset:auto;min-height:100vh;page-break-after:always}
+}
+</style>
+</head>
+<body>
+<div class="bar" id="bar"></div>
+<div class="deck" id="deck">
+
+  <section class="slide night on">
+    <div class="top">
+      <div class="mark">Sénse<small>TOKYO</small></div>
+      <div class="eyebrow">For Isadora</div>
+    </div>
+    <div class="mid">
+      <div class="kicker">September 2026</div>
+      <h1>Your practice,<br><em>on your terms.</em></h1>
+      <p class="lede">Fixed projects. Swedish or English. From home. You keep the hour, the room, and the calendar.</p>
+    </div>
+    <div class="foot"><span>Prepared for Isadora Ekenberg</span><span>Arrow keys to move</span></div>
+  </section>
+
+  <section class="slide statement">
+    <div class="top"><div class="mark">Sénse<small>TOKYO</small></div><div class="eyebrow">01 — The decision</div></div>
+    <div class="mid">
+      <h1>You need the next project.</h1>
+      <p class="lede">One client. A finished scope. Then the next name. A job is not the path.</p>
+    </div>
+    <div class="foot"><span>Audience: Isadora</span><span>Purpose: choose the first letter</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="top"><div class="mark">Sénse<small>TOKYO</small></div><div class="eyebrow">02 — What changes</div></div>
+    <div class="mid">
+      <h1>The Delia contract ends.</h1>
+      <p class="lede">The work can stay in your portfolio. The next client does not come from that relationship. The pipeline starts with a new name.</p>
+    </div>
+    <div class="foot"><span>Stated by Keigo, September 2026</span><span></span></div>
+  </section>
+
+  <section class="slide night">
+    <div class="top"><div class="mark">Sénse<small>TOKYO</small></div><div class="eyebrow">03 — The line</div></div>
+    <div class="mid">
+      <div class="kicker">Say this, then stop</div>
+      <h1>Swedish creative director in Tokyo.</h1>
+      <p class="lede">Fixed brand and launch projects. English or Swedish. From home. You keep the calendar.</p>
+    </div>
+    <div class="foot"><span>One sentence is the whole offer</span><span></span></div>
+  </section>
+
+  <section class="slide">
+    <div class="top"><div class="mark">Sénse<small>TOKYO</small></div><div class="eyebrow">04 — Three ways to buy</div></div>
+    <div class="mid">
+      <div class="offers">
+        <article class="offer">
+          <div class="n">01</div>
+          <h2>Intensive</h2>
+          <p>Half a day you host. Then ten quiet days. Tokyo, or online for Sweden.</p>
+          <div class="fee">€1,200–2,500</div>
+        </article>
+        <article class="offer">
+          <div class="n">02</div>
+          <h2>Brand sprint</h2>
+          <p>Three weeks. Audience, tone, visual direction, and a 30-day content system.</p>
+          <div class="fee">€3,500–6,000</div>
+        </article>
+        <article class="offer">
+          <div class="n">03</div>
+          <h2>Launch</h2>
+          <p>Four to six weeks. You direct a drop. A developer builds.</p>
+          <div class="fee">€6,000–12,000</div>
+        </article>
+      </div>
+    </div>
+    <div class="foot"><span class="note">Quote the project, not an hour. A published Swedish floor for brand identity is €2,400 (DLHF). These ranges sit above that floor.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="top"><div class="mark">Sénse<small>TOKYO</small></div><div class="eyebrow">05 — The calendar</div></div>
+    <div class="mid">
+      <div class="rule">
+        <div class="big">1</div>
+        <div>
+          <h1>One project at a time.</h1>
+          <p class="lede">The next client gets a start date. While a project is open, about eight hours a week. You choose which hours.</p>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span>Home, except a session you host</span><span>Swedish or English only</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="top"><div class="mark">Sénse<small>TOKYO</small></div><div class="eyebrow">06 — A year you can hold</div></div>
+    <div class="mid">
+      <div class="years">
+        <article class="year">
+          <div class="v">€18,000</div>
+          <h2>Light</h2>
+          <p>Four brand sprints. About 96 production hours.</p>
+        </article>
+        <article class="year">
+          <div class="v">€30,600</div>
+          <h2>Steady</h2>
+          <p>Two intensives, four sprints, one launch. About 160 hours.</p>
+        </article>
+        <article class="year">
+          <div class="v">€47,700</div>
+          <h2>Full flex</h2>
+          <p>Still one project at a time. About 248 hours. Not a job.</p>
+        </article>
+      </div>
+    </div>
+    <div class="foot"><span class="note">Model, not a forecast. Midpoints: intensive €1,800, sprint €4,500, launch €9,000. Invoice in euros or kronor on the invoice date.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="top"><div class="mark">Sénse<small>TOKYO</small></div><div class="eyebrow">07 — Proof a buyer can open</div></div>
+    <div class="mid">
+      <div class="proofs">
+        <article class="proof">
+          <h2>Fetch and Match Tokyo</h2>
+          <p>You produced the brand, the Shopify store, and the model. From zero.</p>
+        </article>
+        <article class="proof">
+          <h2>ISADÓRA JEWELS</h2>
+          <p>Your own brand. The public line is creative director, in Tokyo.</p>
+        </article>
+        <article class="proof">
+          <h2>@isadoraekenberg</h2>
+          <p>About 43,000 followers in the March 2026 company plan. Link the account.</p>
+        </article>
+      </div>
+    </div>
+    <div class="foot"><span class="note">PhotoVogue stays off the first page. On 26 September 2026 the public gallery showed no photos.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="top"><div class="mark">Sénse<small>TOKYO</small></div><div class="eyebrow">08 — Six letters, then stop</div></div>
+    <div class="mid">
+      <div class="names">
+        <article class="name"><h2>LISA YANG</h2><p class="role">Brand sprint. East meets West, in cashmere.</p><p class="path">press@lisa-yang.com</p></article>
+        <article class="name"><h2>Melyon</h2><p class="role">Brand sprint. Stockholm skincare, in English.</p><p class="path">work@melyon.se</p></article>
+        <article class="name"><h2>HODAKOVA</h2><p class="role">Launch direction. Converted goods, Stockholm.</p><p class="path">info@hodakova.com</p></article>
+        <article class="name"><h2>Flattered</h2><p class="role">Launch direction. Shoes, seasonal drops.</p><p class="path">press@flattered.com</p></article>
+        <article class="name"><h2>nattnatt</h2><p class="role">Intensive, in Swedish. Family sleepwear.</p><p class="path">info@nattnatt.se</p></article>
+        <article class="name"><h2>Rave RVW</h2><p class="role">One Tokyo chapter. Upcycled fashion.</p><p class="path">rave-rvw.com/contact</p></article>
+      </div>
+    </div>
+    <div class="foot"><span class="note">Checked on public pages, 26 September 2026. Write to press or studio. Never the order desk.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="top"><div class="mark">Sénse<small>TOKYO</small></div><div class="eyebrow">09 — These four can wait</div></div>
+    <div class="mid">
+      <div class="later">
+        <article><h2>Asket</h2><p>A Tokyo chapter only. press@asket.com. Their brand is already tight.</p></article>
+        <article><h2>No Bond Beauty</h2><p>A sprint, in Swedish. Use the contact form, and say it is a studio proposal.</p></article>
+        <article><h2>fjör</h2><p>Launch direction. Write Natalie Enslöw on LinkedIn. No studio email was public.</p></article>
+        <article><h2>Malin Jansson</h2><p>Intensive only. One studio in Malmö. webshop@malinjansson.com</p></article>
+      </div>
+    </div>
+    <div class="foot"><span>After the first six have an answer</span><span></span></div>
+  </section>
+
+  <section class="slide">
+    <div class="top"><div class="mark">Sénse<small>TOKYO</small></div><div class="eyebrow">10 — Rooms you can enter</div></div>
+    <div class="mid">
+      <div class="rooms">
+        <article class="room">
+          <div class="when">6 October 2026</div>
+          <h2>The Human Signal</h2>
+          <p>English. Tokyo Innovation Base. A founder evening. You attend. You do not staff it.</p>
+        </article>
+        <article class="room">
+          <div class="when">Ongoing</div>
+          <h2>Dynamite Circle</h2>
+          <p>English-speaking founders in Tokyo. Their Juntos are a room, not a contract.</p>
+        </article>
+        <article class="room">
+          <div class="when">15 October, proposed</div>
+          <h2>eChai mixer</h2>
+          <p>English. It is booked only after ten founders register. Watch the page.</p>
+        </article>
+      </div>
+    </div>
+    <div class="foot"><span class="note">Or host your own half-day for six to eight people. You choose the room and the hour.</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="top"><div class="mark">Sénse<small>TOKYO</small></div><div class="eyebrow">11 — Ninety days</div></div>
+    <div class="mid">
+      <div class="days">
+        <article class="day"><div class="n">01</div><div><h2>Days 1–14. One page, two languages.</h2><p>Three fees. Three proofs: Fetch and Match, ISADÓRA JEWELS, the Instagram.</p></div></article>
+        <article class="day"><div class="n">02</div><div><h2>Days 10–20. The six letters.</h2><p>Then stop. Two conversations, or a clear no, is enough.</p></div></article>
+        <article class="day"><div class="n">03</div><div><h2>Days 21–45. One room.</h2><p>Host a paid intensive, or attend The Human Signal on 6 October.</p></div></article>
+        <article class="day"><div class="n">04</div><div><h2>Days 45–90. Deliver, then ask.</h2><p>Who else is launching in the next ninety days? The next start date comes after this one ends.</p></div></article>
+      </div>
+    </div>
+    <div class="foot"><span>Three new paid projects in six months</span><span></span></div>
+  </section>
+
+  <section class="slide night">
+    <div class="top"><div class="mark">Sénse<small>TOKYO</small></div><div class="eyebrow">12 — This week</div></div>
+    <div class="mid week">
+      <div class="kicker">The first letter</div>
+      <h1>Write to LISA YANG.</h1>
+      <p class="to">press@lisa-yang.com<span>Three images. One page. A Tokyo chapter for the cashmere story.</span></p>
+    </div>
+    <div class="foot"><span>East meets West is already their sentence</span><span></span></div>
+  </section>
+
+  <section class="slide night">
+    <div class="top"><div class="mark">Sénse<small>TOKYO</small></div><div class="eyebrow">Close</div></div>
+    <div class="mid">
+      <h1>You keep the hour.</h1>
+      <p class="lede">Sense Tokyo sends the invoice. You choose the language, the room, and when the next project begins.</p>
+    </div>
+    <div class="foot">
+      <span class="note">Sources: Sense Tokyo company plan, March 2026. Public brand pages checked 26 September 2026. DLHF price list for the €2,400 floor. Annual figures are midpoints of the fees on this deck. LinkedIn headcounts were used only to leave large houses off the list.</span>
+    </div>
+  </section>
+
+</div>
+
+<div class="chrome">
+  <button type="button" id="prev">Previous</button>
+  <div class="count" id="count">01  /  14</div>
+  <button type="button" id="next">Next</button>
+</div>
+
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var count = document.getElementById("count");
+  var bar = document.getElementById("bar");
+  var i = 0;
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (s, idx) { s.classList.toggle("on", idx === i); });
+    count.textContent = pad(i + 1) + "  /  " + pad(slides.length);
+    bar.style.width = ((i + 1) / slides.length * 100) + "%";
+    if (location.hash !== "#" + (i + 1)) history.replaceState(null, "", "#" + (i + 1));
+  }
+  document.getElementById("next").addEventListener("click", function () { show(i + 1); });
+  document.getElementById("prev").addEventListener("click", function () { show(i - 1); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); show(i + 1); }
+    if (e.key === "ArrowLeft" || e.key === "ArrowUp" || e.key === "PageUp") { e.preventDefault(); show(i - 1); }
+    if (e.key === "Home") { e.preventDefault(); show(0); }
+    if (e.key === "End") { e.preventDefault(); show(slides.length - 1); }
+  });
+  var startX = 0;
+  document.addEventListener("touchstart", function (e) { startX = e.changedTouches[0].clientX; }, { passive: true });
+  document.addEventListener("touchend", function (e) {
+    var dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 40) show(i + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+  var fromHash = parseInt(location.hash.replace("#", ""), 10);
+  show(isNaN(fromHash) ? 0 : fromHash - 1);
+})();
+</script>
+</body>
+</html>
